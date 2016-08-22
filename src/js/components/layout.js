@@ -1,6 +1,7 @@
 import React from "react";
-import Header from './Header';
-import Footer from './Footer';
+import Header from './Layout/Header';
+import Footer from './Layout/Footer';
+import {Link} from 'react-router';
 
 export default class Layout extends React.Component {
 
@@ -21,6 +22,8 @@ export default class Layout extends React.Component {
 		return (
 			<div>
 				<Header title={this.state.title} updateTitle={this.updateTitle} />
+				<Link to="userList" >go to user list</Link>
+				{this.props.children}
 				<Footer title={this.state.title} />
 			</div>
 		);
