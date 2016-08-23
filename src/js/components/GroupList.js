@@ -39,7 +39,7 @@ export default class GroupList extends React.Component {
 
   getAllGroups(){
     this.setState(
-      Object.assign({}, GroupStore.getAll())
+      Object.assign({}, this.state, GroupStore.getAll())
     );
   }
 

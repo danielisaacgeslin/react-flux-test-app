@@ -5,8 +5,8 @@ class GroupStore extends EventEmitter {
   constructor(){
     super();
     this.groups = [
-      {id:1, name: 'group 1', description: 'this is one group'},
-      {id:2, name: 'group 2', description: 'this is another group'}
+      {id:1, name: 'group 1', description: 'this is one group', users: [1,2]},
+      {id:2, name: 'group 2', description: 'this is another group', users: []}
     ];
   }
 
@@ -25,7 +25,8 @@ class GroupStore extends EventEmitter {
 
   createGroup(name, description){
     const id = Date.now();
-    this.groups.push({id, name, description});
+    const users = [];
+    this.groups.push({id, name, description, users});
   }
 
   deleteGroup(id){
@@ -35,6 +36,10 @@ class GroupStore extends EventEmitter {
         break;
       }
     }
+  }
+
+  addUser(groupId, userId){
+    this.getGroup(groupId).users.push(userId);
   }
 
   handleActions(action) {
@@ -47,6 +52,11 @@ class GroupStore extends EventEmitter {
       case "DELETE_GROUP": {
         this.deleteGroup(action.id);
         this.emit('updateGroups');
+        break;
+      }
+      case "ADD_USER": {
+        this.addUser(action.groupId, action.userId);
+        this.emit('updateGroupUsers');
         break;
       }
     }

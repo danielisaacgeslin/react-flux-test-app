@@ -39,7 +39,7 @@ export default class UserList extends React.Component {
 
   getAllUsers(){
     this.setState(
-      Object.assign({}, UserStore.getAll())
+      Object.assign({}, this.state, UserStore.getAll())
     );
   }
 
