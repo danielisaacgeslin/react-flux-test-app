@@ -23,6 +23,8 @@ export default class Layout extends React.Component {
 			<div>
 				<Header title={this.state.title} updateTitle={this.updateTitle} />
 				<Link to="userList" >go to user list</Link>
+				<span> - </span>
+				<Link to="groupList" >go to group list</Link>
 				{this.props.children}
 				<Footer title={this.state.title} />
 			</div>

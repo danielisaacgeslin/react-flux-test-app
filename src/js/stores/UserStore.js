@@ -5,12 +5,12 @@ class UserStore extends EventEmitter {
   constructor(){
     super();
     this.users = [
-      {id:1, username: 'pepe', groups: [1,5,8,3,2]},
-      {id:2, username: 'juan', groups: [7,3]},
-      {id:3, username: 'pepito', groups: [1]},
-      {id:4, username: 'juancho', groups: [7,4,1,2]},
-      {id:5, username: 'juan pepe del castillo', groups: [1,3,9,4]},
-      {id:6, username: 'pejuan', groups: [2,3,5,6,7,9,4,2]}
+      {id:1, username: 'pepe', age: 15},
+      {id:2, username: 'juan', age: 25},
+      {id:3, username: 'pepito', age: 10},
+      {id:4, username: 'juancho', age: 45},
+      {id:5, username: 'juan pepe del castillo', age: 40},
+      {id:6, username: 'pejuan', age: 28}
     ];
   }
 
@@ -27,18 +27,24 @@ class UserStore extends EventEmitter {
     return {};
   }
 
-  createUser(data){
-    this.users.push(data);
+  createUser(username, age){
+    const id = Date.now();
+    this.users.push({id, username, age});
   }
 
-  deleteUser(){
-
+  deleteUser(id){
+    for(var i=0; i<this.users.length; i++){
+      if(id == this.users[i].id){
+        this.users.splice(i,1);
+        break;
+      }
+    }
   }
 
   handleActions(action) {
     switch(action.type) {
       case "CREATE_USER": {
-        this.createUser(action.data);
+        this.createUser(action.username, action.age);
         this.emit('updateUsers');
         break;
       }
