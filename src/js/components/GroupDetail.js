@@ -2,42 +2,19 @@ import React from 'react';
 import GroupStore from '../stores/GroupStore';
 import UserStore from '../stores/UserStore';
 import UserOption from './GroupDetail/UserOption';
-import dispatcher from  '../dispatcher';
+import * as GroupActions from './actions/GroupActions';
 
 export default class GroupDetail extends React.Component {
   constructor(props){
     super(props);
 
-    const groupData = GroupStore.getGroup(this.props.params.id);
-    const allUsers = UserStore.getAll();
-    let user;
-    let users = []; //saving users
-    let userList = []; //saving usernames string
-    let selectedUser = 0;
-    groupData.users.forEach(function(fullUser){
-      user = UserStore.getUser(fullUser);
-      users.push(user);
-      userList.push(user.username);
-    });
-    userList = userList.toString().replace(',',', ');
-
-    for(var i=0; i<allUsers.length; i++){
-      if(groupData.users.indexOf(allUsers[i].id) === -1){
-        selectedUser = allUsers[i].id;
-        break;
-      }
-    }
-    
     this.state = {
-      allUsers,
-      groupData,
-      selectedUser,
-      users,
-      userList
+      allUsers: UserStore.getAll()
     };
   }
 
   componentWillMount(){
+    this.updateData();
     GroupStore.on('updateGroupUsers', this.updateData.bind(this));
   }
 
@@ -45,17 +22,10 @@ export default class GroupDetail extends React.Component {
     GroupStore.removeListener('updateGroupUsers', this.updateData.bind(this));
   }
 
-  updateSelectedUser(e){
-    const selectedUser = e.target.value;
-    this.setState(Object.assign({}, this.state, {selectedUser}));
-  }
-
-  addUser(groupId){
-    dispatcher.dispatch({
-      type:'ADD_USER',
-      groupId: Number(this.state.groupData.id),
-      userId: Number(this.state.selectedUser)
-    });
+  addUserToGroup(){
+    const groupId = Number(this.state.groupData.id);
+    const userId = Number(this.refs.selectedUser.value);
+    GroupActions.addUserToGroup(groupId, userId);
   }
 
   updateData(){
@@ -63,23 +33,31 @@ export default class GroupDetail extends React.Component {
     let user;
     let users = []; //saving users
     let userList = []; //saving usernames string
+    let userOptions = []; //options for the user dropdown
     groupData.users.forEach(function(fullUser){
       user = UserStore.getUser(fullUser);
       users.push(user);
       userList.push(user.username);
     });
     userList = userList.toString().replace(',',', ');
+
+    this.state.allUsers.forEach(function(user){
+      if(groupData.users.indexOf(user.id) === -1){
+        userOptions.push(user);
+      }
+    }.bind(this));
+
     this.setState(
-      Object.assign({}, this.state, {users, userList, groupData})
+      Object.assign({}, this.state, {users, userList, groupData, userOptions})
     );
   }
 
   render(){
-    const userOptions = this.state.allUsers.map(function(user){
-      if(this.state.groupData.users.indexOf(user.id) === -1){
-        return <UserOption value={user.id} description={user.username} key={user.id} />;
-      }
+    let selectList = [];
+    const userOptions = this.state.userOptions.map(function(user){
+      return <UserOption description={user.username} key={user.id} value={user.id} />;
     }.bind(this));
+
     return (
       <div>
         <h4>details of group id <strong>{this.state.groupData.id}</strong></h4>
@@ -89,10 +67,10 @@ export default class GroupDetail extends React.Component {
           <li><strong>description: </strong> {this.state.groupData.description}</li>
           <li><strong>users: </strong> {this.state.userList}</li>
         </ul>
-        <select onChange={(e)=>{this.updateSelectedUser(e)}}>
+        <select ref="selectedUser">
           {userOptions}
         </select>
-        <button onClick={()=>{this.addUser()}}>add user</button>
+        <button onClick={()=>{this.addUserToGroup()}}>add user to group</button>
       </div>
     );
   }
