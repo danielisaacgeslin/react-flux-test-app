@@ -2,7 +2,7 @@ import React from "react";
 import UserListItem from "./UserList/UserListItem";
 import UserCreator from "./UserList/UserCreator";
 import UserStore from "../stores/UserStore";
-import * as UserActions from './actions/UserActions';
+import * as UserActions from '../actions/UserActions';
 
 export default class UserList extends React.Component {
   constructor(){

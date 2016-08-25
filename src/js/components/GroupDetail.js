@@ -2,7 +2,7 @@ import React from 'react';
 import GroupStore from '../stores/GroupStore';
 import UserStore from '../stores/UserStore';
 import UserOption from './GroupDetail/UserOption';
-import * as GroupActions from './actions/GroupActions';
+import * as GroupActions from '../actions/GroupActions';
 
 export default class GroupDetail extends React.Component {
   constructor(props){

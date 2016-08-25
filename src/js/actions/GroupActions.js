@@ -1,4 +1,4 @@
-import dispatcher from "../../dispatcher";
+import dispatcher from "../dispatcher";
 
 export function addUserToGroup(groupId, userId){
   dispatcher.dispatch({

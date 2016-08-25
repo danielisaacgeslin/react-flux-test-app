@@ -2,7 +2,7 @@ import React from 'react';
 import GroupStore from '../stores/GroupStore';
 import GroupListItem from './GroupList/GroupListItem';
 import GroupCreator from './GroupList/GroupCreator';
-import * as GroupActions from './actions/GroupActions';
+import * as GroupActions from '../actions/GroupActions';
 
 export default class GroupList extends React.Component {
   constructor(){
