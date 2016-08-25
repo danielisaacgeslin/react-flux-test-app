@@ -9,19 +9,38 @@ export default class GroupList extends React.Component {
     super();
 
     this.getAllGroups = this.getAllGroups.bind(this);
+    this.updateLoading = this.updateLoading.bind(this);
 
     this.state = {
-      groups: GroupStore.getAll(),
-      creation: {}
+      groups: [],
+      creation: {},
+      loading: false
     }
   }
 
   componentWillMount(){
     GroupStore.on('updateGroups', this.getAllGroups);
+    GroupStore.on('updateLoading', this.updateLoading);
+    this.getAllGroups();
   }
 
   componentWillUnmount(){
     GroupStore.removeListener('updateGroups', this.getAllGroups);
+    GroupStore.removeListener('updateLoading', this.updateLoading);
+  }
+
+  componentDidMount(){
+    /*initial async load*/
+    this.reloadGroups();
+  }
+
+  updateLoading(){
+    const loading = GroupStore.getLoading();
+    this.setState(Object.assign({}, this.state, {loading}));
+  }
+
+  reloadGroups(){
+    GroupActions.reloadGroups();
   }
 
   updateCreationName(e){
@@ -39,8 +58,9 @@ export default class GroupList extends React.Component {
   }
 
   getAllGroups(){
+    const groups = GroupStore.getAll();
     this.setState(
-      Object.assign({}, this.state, GroupStore.getAll())
+      Object.assign({}, this.state, {groups})
     );
   }
 
@@ -49,12 +69,14 @@ export default class GroupList extends React.Component {
       return <GroupListItem name={group.name} id={group.id} key={group.id} />;
     });
 
+    let loading = this.state.loading ? 'updating...' : '';
     return (
       <div>
-      <GroupCreator
-        updateCreationName={this.updateCreationName.bind(this)}
-        updateCreationDescription={this.updateCreationDescription.bind(this)}
-        createGroup={this.createGroup.bind(this)} />
+        <GroupCreator
+          updateCreationName={this.updateCreationName.bind(this)}
+          updateCreationDescription={this.updateCreationDescription.bind(this)}
+          createGroup={this.createGroup.bind(this)} />
+        <p>{loading}</p>
         <table>
           <thead>
             <tr>

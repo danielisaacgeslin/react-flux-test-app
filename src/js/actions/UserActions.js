@@ -14,3 +14,7 @@ export function deleteUser(id){
     id,
   });
 }
+
+export function reloadUsers(){
+  dispatcher.dispatch({type: 'RELOAD_USERS'});
+}

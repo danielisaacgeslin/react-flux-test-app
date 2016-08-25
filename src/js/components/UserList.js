@@ -9,20 +9,38 @@ export default class UserList extends React.Component {
     super();
 
     this.getAllUsers = this.getAllUsers.bind(this);
+    this.updateLoading = this.updateLoading.bind(this);
 
     this.state = {
       users:[],
-      creation: {}
+      creation: {},
+      loading: false
     }
   }
 
   componentWillMount(){
-    this.getAllUsers();
     UserStore.on('updateUsers', this.getAllUsers);
+    UserStore.on('updateLoading', this.updateLoading);
+    this.getAllUsers();
   }
 
   componentWillUnmount(){
     UserStore.removeListener('updateUsers', this.getAllUsers);
+    UserStore.removeListener('updateLoading', this.updateLoading);
+  }
+
+  componentDidMount(){
+    /*initial async load*/
+    this.reloadUsers();
+  }
+
+  updateLoading(){
+    const loading = UserStore.getLoading();
+    this.setState(Object.assign({}, this.state, {loading}));
+  }
+
+  reloadUsers(){
+    UserActions.reloadUsers();
   }
 
   updateCreationUsername(e){
@@ -51,13 +69,14 @@ export default class UserList extends React.Component {
     const userListItems = this.state.users.map((user) =>{
       return <UserListItem username={user.username} id={user.id} key={user.id} />;
     });
-
+    let loading = this.state.loading ? 'updating...' : '';
     return (
       <div>
         <UserCreator
           updateCreationUsername={this.updateCreationUsername.bind(this)}
           updateCreationAge={this.updateCreationAge.bind(this)}
           createUser={this.createUser.bind(this)} />
+          <p>{loading}</p>
         <table>
           <thead>
             <tr>

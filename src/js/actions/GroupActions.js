@@ -22,3 +22,7 @@ export function deleteGroup(id){
     id
   });
 }
+
+export function reloadGroups(){
+  dispatcher.dispatch({type: 'RELOAD_GROUPS'});
+}

@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "./node_modules/.bin/webpack-dev-server --content-base src",
+    "dev": "SET NODE_ENV=dev&& webpack-dev-server --content-base src",
+    "prd": "SET NODE_ENV=production&& webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
