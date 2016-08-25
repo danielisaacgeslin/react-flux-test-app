@@ -16,8 +16,8 @@ export default class GroupDetail extends React.Component {
   }
 
   componentWillMount(){
-    this.updateData();
     GroupStore.on('updateGroupUsers', this.updateData);
+    this.updateData();
   }
 
   componentWillUnmount(){

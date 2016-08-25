@@ -11,7 +11,7 @@ export default class UserDetail extends React.Component {
         <ul>
           <li><strong>id:</strong> {userData.id}</li>
           <li><strong>username:</strong> {userData.username}</li>
-        <li><strong>age:</strong> {userData.age}</li>
+          <li><strong>age:</strong> {userData.age}</li>
         </ul>
       </div>
     );
