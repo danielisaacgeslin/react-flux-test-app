@@ -1,9 +1,5 @@
 import React from 'react';
 
-export default class UserOption extends React.Component {
-  render(){
-    return (
-      <option value={this.props.value}>{this.props.description}</option>
-    );
-  }
-}
+const UserOption = (props)=> <option value={props.value}>{props.description}</option>;
+
+export default UserOption;
