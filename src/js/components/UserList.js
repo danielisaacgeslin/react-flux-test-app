@@ -2,7 +2,7 @@ import React from "react";
 import UserListItem from "./UserList/UserListItem";
 import UserCreator from "./UserList/UserCreator";
 import UserStore from "../stores/UserStore";
-import dispatcher from '../dispatcher';
+import * as UserActions from './actions/UserActions';
 
 export default class UserList extends React.Component {
   constructor(){
@@ -30,11 +30,9 @@ export default class UserList extends React.Component {
   }
 
   createUser(){
-    dispatcher.dispatch({
-      type:'CREATE_USER',
-      username:this.state.creation.username,
-      age:this.state.creation.age
-    });
+    const username = this.state.creation.username;
+    const age = this.state.creation.age;
+    UserActions.createUser(username, age);
   }
 
   getAllUsers(){

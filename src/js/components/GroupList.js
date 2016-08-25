@@ -2,7 +2,7 @@ import React from 'react';
 import GroupStore from '../stores/GroupStore';
 import GroupListItem from './GroupList/GroupListItem';
 import GroupCreator from './GroupList/GroupCreator';
-import dispatcher from '../dispatcher';
+import * as GroupActions from './actions/GroupActions';
 
 export default class GroupList extends React.Component {
   constructor(){
@@ -30,11 +30,9 @@ export default class GroupList extends React.Component {
   }
 
   createGroup(){
-    dispatcher.dispatch({
-      type:'CREATE_GROUP',
-      name:this.state.creation.name,
-      description:this.state.creation.description
-    });
+    const name = this.state.creation.name;
+    const description = this.state.creation.description;
+    GroupActions.createGroup(name, description);
   }
 
   getAllGroups(){
