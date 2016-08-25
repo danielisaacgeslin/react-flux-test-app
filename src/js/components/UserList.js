@@ -7,18 +7,22 @@ import * as UserActions from '../actions/UserActions';
 export default class UserList extends React.Component {
   constructor(){
     super();
+
+    this.getAllUsers = this.getAllUsers.bind(this);
+
     this.state = {
-      users: UserStore.getAll(),
+      users:[],
       creation: {}
     }
   }
 
   componentWillMount(){
-    UserStore.on('updateUsers', this.getAllUsers.bind(this));
+    this.getAllUsers();
+    UserStore.on('updateUsers', this.getAllUsers);
   }
 
   componentWillUnmount(){
-    UserStore.removeListener('updateUsers', this.getAllUsers.bind(this));
+    UserStore.removeListener('updateUsers', this.getAllUsers);
   }
 
   updateCreationUsername(e){
@@ -36,8 +40,9 @@ export default class UserList extends React.Component {
   }
 
   getAllUsers(){
+    const users = UserStore.getAll();
     this.setState(
-      Object.assign({}, this.state, UserStore.getAll())
+      Object.assign({}, this.state, {users})
     );
   }
 

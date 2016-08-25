@@ -19,7 +19,7 @@ module.exports = {
         }
       },
       {
-        test: /\.scss$/, 
+        test: /\.scss$/,
         loader: ExtractTextPlugin.extract(
             'style', // backup loader when not building .css file
             'css!sass' // loaders to preprocess CSS
@@ -38,6 +38,6 @@ module.exports = {
     new ExtractTextPlugin('style.css'),
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: false }),
+    new webpack.optimize.UglifyJsPlugin({ mangle: true, sourcemap: true }),
   ],
 };

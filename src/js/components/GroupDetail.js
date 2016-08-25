@@ -8,6 +8,8 @@ export default class GroupDetail extends React.Component {
   constructor(props){
     super(props);
 
+    this.updateData = this.updateData.bind(this);
+
     this.state = {
       allUsers: UserStore.getAll()
     };
@@ -15,11 +17,11 @@ export default class GroupDetail extends React.Component {
 
   componentWillMount(){
     this.updateData();
-    GroupStore.on('updateGroupUsers', this.updateData.bind(this));
+    GroupStore.on('updateGroupUsers', this.updateData);
   }
 
   componentWillUnmount(){
-    GroupStore.removeListener('updateGroupUsers', this.updateData.bind(this));
+    GroupStore.removeListener('updateGroupUsers', this.updateData);
   }
 
   addUserToGroup(){

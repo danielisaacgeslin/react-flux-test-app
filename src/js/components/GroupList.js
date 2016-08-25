@@ -7,6 +7,9 @@ import * as GroupActions from '../actions/GroupActions';
 export default class GroupList extends React.Component {
   constructor(){
     super();
+
+    this.getAllGroups = this.getAllGroups.bind(this);
+
     this.state = {
       groups: GroupStore.getAll(),
       creation: {}
@@ -14,11 +17,11 @@ export default class GroupList extends React.Component {
   }
 
   componentWillMount(){
-    GroupStore.on('updateGroups', this.getAllGroups.bind(this));
+    GroupStore.on('updateGroups', this.getAllGroups);
   }
 
   componentWillUnmount(){
-    GroupStore.removeListener('updateGroups', this.getAllGroups.bind(this));
+    GroupStore.removeListener('updateGroups', this.getAllGroups);
   }
 
   updateCreationName(e){
