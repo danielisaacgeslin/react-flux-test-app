@@ -21,7 +21,6 @@ export default class GroupList extends React.Component {
   componentWillMount(){
     GroupStore.on('updateGroups', this.getAllGroups);
     GroupStore.on('updateLoading', this.updateLoading);
-    this.getAllGroups();
   }
 
   componentWillUnmount(){

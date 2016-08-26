@@ -45,6 +45,13 @@ class UserStore extends EventEmitter {
   }
 
   reloadUsers(){
+    if(this.users.length){
+      return new Promise((resolve, reject)=>{
+        const data = this.users;
+        resolve({data});
+      });
+    }
+
     return new Promise((resolve, reject)=>{
       /*simulation ajax*/
       setTimeout(()=>{
@@ -57,24 +64,8 @@ class UserStore extends EventEmitter {
           {id:6, username: 'pejuan', age: 28}
         ];
         resolve({data});
-      },1000);
+      },800);
     });
-  }
-
-  mergeUsers(newUsers){
-    let flag;
-    newUsers.forEach(function(newUser){
-      flag = true;
-      for(var i=0; i<this.users.length; i++){
-        if(this.users[i].id === newUser.id){
-          flag = false;
-          break;
-        }
-      }
-      if(flag){
-        this.users.push(newUser);
-      }
-    }.bind(this));
   }
 
   handleActions(action) {
@@ -98,7 +89,7 @@ class UserStore extends EventEmitter {
         this.loading = true;
         this.emit('updateLoading');
         this.reloadUsers().then((response)=>{
-          this.mergeUsers(response.data);
+          this.users = response.data;
           this.loading = false;
           this.emit('updateLoading');
           this.emit('updateUsers');

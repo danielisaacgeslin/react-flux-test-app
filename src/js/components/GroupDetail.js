@@ -3,25 +3,78 @@ import GroupStore from '../stores/GroupStore';
 import UserStore from '../stores/UserStore';
 import UserOption from './GroupDetail/UserOption';
 import * as GroupActions from '../actions/GroupActions';
+import * as UserActions from '../actions/UserActions';
 
 export default class GroupDetail extends React.Component {
   constructor(props){
     super(props);
 
     this.updateData = this.updateData.bind(this);
+    this.updateLoading = this.updateLoading.bind(this);
+    this.getAllUsers = this.getAllUsers.bind(this);
+    this.groupsLoaded = this.groupsLoaded.bind(this);
 
     this.state = {
-      allUsers: UserStore.getAll()
+      allUsers: [],
+      groupData: {
+        id: null,
+        name: null,
+        description: null,
+        users: []
+      },
+      userOptions: [],
+      userList: '',
+      loading: false,
+      groupsLoaded: false
     };
   }
 
   componentWillMount(){
     GroupStore.on('updateGroupUsers', this.updateData);
-    this.updateData();
+    GroupStore.on('updateLoading', this.updateLoading);
+    UserStore.on('updateUsers', this.getAllUsers);
+    GroupStore.on('updateGroups', this.groupsLoaded);
   }
 
   componentWillUnmount(){
     GroupStore.removeListener('updateGroupUsers', this.updateData);
+    GroupStore.removeListener('updateLoading', this.updateLoading);
+    UserStore.removeListener('updateUsers', this.getAllUsers);
+    GroupStore.removeListener('updateGroups', this.groupsLoaded);
+  }
+
+  componentDidMount(){
+    this.reloadUsers();
+    this.reloadGroups();
+  }
+
+  reloadGroups(){
+    GroupActions.reloadGroups();
+  }
+
+  reloadUsers(){
+    UserActions.reloadUsers();
+  }
+
+  groupsLoaded(){
+    const groupsLoaded = true;
+    this.setState(
+      Object.assign({}, this.state, {groupsLoaded})
+    );
+    this.updateData();
+  }
+
+  getAllUsers(){
+    const allUsers = UserStore.getAll();
+    this.setState(
+      Object.assign({}, this.state, {allUsers})
+    );
+    this.updateData();
+  }
+
+  updateLoading(){
+    const loading = GroupStore.getLoading();
+    this.setState(Object.assign({}, this.state, {loading}));
   }
 
   addUserToGroup(){
@@ -31,6 +84,9 @@ export default class GroupDetail extends React.Component {
   }
 
   updateData(){
+    if(!this.state.groupsLoaded){
+      return false;
+    }
     const groupData = GroupStore.getGroup(this.props.params.id);
     let user;
     let users = []; //saving users
@@ -56,13 +112,16 @@ export default class GroupDetail extends React.Component {
 
   render(){
     let selectList = [];
+    let loading = this.state.loading ? 'updating...' : '';
     const userOptions = this.state.userOptions.map(function(user){
       return <UserOption description={user.username} key={user.id} value={user.id} />;
     }.bind(this));
 
+
     return (
       <div>
         <h4>details of group id <strong>{this.state.groupData.id}</strong></h4>
+        <p>{loading}</p>
         <ul>
           <li><strong>id: </strong> {this.state.groupData.id}</li>
           <li><strong>name: </strong> {this.state.groupData.name}</li>

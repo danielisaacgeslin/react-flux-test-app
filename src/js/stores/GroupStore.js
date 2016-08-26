@@ -29,8 +29,10 @@ class GroupStore extends EventEmitter {
     const id = Date.now();
     const users = [];
     return new Promise((resolve, reject)=>{
-      this.groups.push({id, name, description, users});
-      resolve(true);
+      setTimeout(()=>{
+          this.groups.push({id, name, description, users});
+          resolve(true);
+      },300);
     });
   }
 
@@ -48,27 +50,18 @@ class GroupStore extends EventEmitter {
       setTimeout(()=>{
         this.getGroup(groupId).users.push(userId);
         resolve(true);
-      },500);
+      },300);
     });
   }
 
-  mergeGroups(newGroups){
-    let flag;
-    newGroups.forEach(function(newGroup){
-      flag = true;
-      for(var i=0; i<this.groups.length; i++){
-        if(this.groups[i].id === newGroup.id){
-          flag = false;
-          break;
-        }
-      }
-      if(flag){
-        this.groups.push(newGroup);
-      }
-    }.bind(this));
-  }
-
   reloadGroups(){
+    if(this.groups.length){
+      return new Promise((resolve, reject)=>{
+        const data = this.groups;
+        resolve({data});
+      });
+    }
+
     return new Promise((resolve, reject)=>{
       /*simulation ajax*/
       setTimeout(()=>{
@@ -112,7 +105,7 @@ class GroupStore extends EventEmitter {
         this.loading = true;
         this.emit('updateLoading');
         this.reloadGroups().then((response)=>{
-          this.mergeGroups(response.data);
+          this.groups = response.data;
           this.loading = false;
           this.emit('updateLoading');
           this.emit('updateGroups');

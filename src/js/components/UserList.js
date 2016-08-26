@@ -21,7 +21,6 @@ export default class UserList extends React.Component {
   componentWillMount(){
     UserStore.on('updateUsers', this.getAllUsers);
     UserStore.on('updateLoading', this.updateLoading);
-    this.getAllUsers();
   }
 
   componentWillUnmount(){
